@@ -18,7 +18,7 @@ const ogImage = new URL('/og.png', Astro.site)
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
-  name: 'Manual todos',
+  name: 'Manual Tasks',
   applicationCategory: 'DeveloperApplication',
   operatingSystem: 'Linux, macOS, Windows',
   url: canonical.toString(),
@@ -56,7 +56,7 @@ const schema = {
     <link rel="preload" as="font" type="font/woff2" href={outfitLatin} crossorigin />
 
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Manual todos" />
+    <meta property="og:site_name" content="Manual Tasks" />
     <meta property="og:locale" content={language === 'en' ? 'en_GB' : 'es_ES'} />
     <meta property="og:title" content={t.meta.title} />
     <meta property="og:description" content={t.meta.description} />
@@ -101,7 +101,7 @@ const schema = {
               stroke-linejoin="round"
             />
           </svg>
-          Manual todos
+          Manual Tasks
         </a>
 
         <nav class="hidden flex-1 items-center gap-6 text-sm text-night-muted md:flex">

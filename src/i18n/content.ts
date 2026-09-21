@@ -37,7 +37,7 @@ export type TerminalLine = {
 const en = {
   meta: {
     lang: 'en',
-    title: 'Manual todos — everything only you can do, in one place',
+    title: 'Manual Tasks — everything only you can do, in one place',
     description:
       'A Claude Code plugin that records the manual steps left after its work — a console setting, an agreement to accept, a review to answer — with the exact values, the links and what blocks what. On a board, on your machine.',
     ogAlt: 'A task board showing pending manual work grouped by project.',
@@ -183,7 +183,7 @@ const en = {
 const es: typeof en = {
   meta: {
     lang: 'es',
-    title: 'Manual todos — todo lo que solo puedes hacer tú, en un sitio',
+    title: 'Manual Tasks — todo lo que solo puedes hacer tú, en un sitio',
     description:
       'Un plugin de Claude Code que apunta los pasos manuales que quedan después de su trabajo — un ajuste en una consola, un acuerdo que aceptar, una reseña que contestar — con los valores exactos, los enlaces y qué bloquea a qué. En un tablero, en tu máquina.',
     ogAlt: 'Un tablero de tareas con el trabajo manual pendiente, agrupado por proyecto.',

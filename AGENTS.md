@@ -1,4 +1,4 @@
-# Working on the Manual todos landing page
+# Working on the Manual Tasks landing page
 
 Astro, static, no framework components. One page in two languages, at
 `manualtasks.dev`. It is the only public face of a product whose other repositories are

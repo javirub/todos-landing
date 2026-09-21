@@ -1,6 +1,6 @@
 # manualtasks.dev
 
-The landing page for **Manual todos**, a Claude Code plugin that records the manual steps
+The landing page for **Manual Tasks**, a Claude Code plugin that records the manual steps
 left after Claude's work — a console setting, an agreement to accept, a review to answer —
 with the exact values, the links and what blocks what.
 

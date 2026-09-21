@@ -1,5 +1,5 @@
 /*
- * Manual todos design tokens.
+ * Manual Tasks design tokens.
  *
  * These are not invented here. The board generates its CSS from
  * `todo-plugin/src/lib/theme/tokens.ts`, where every lightness in the interface is
