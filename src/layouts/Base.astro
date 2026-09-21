@@ -1,0 +1,162 @@
+---
+import '../styles/global.css'
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url'
+import outfitLatin from '@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url'
+import { contentFor, homeFor, REPO_URL, DOCS_URL, LICENCE_URL, type Language } from '../i18n/content'
+
+interface Props {
+  language: Language
+}
+
+const { language } = Astro.props
+const t = contentFor(language)
+
+const other: Language = language === 'en' ? 'es' : 'en'
+const canonical = new URL(Astro.url.pathname, Astro.site)
+const ogImage = new URL('/og.png', Astro.site)
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: 'Manual todos',
+  applicationCategory: 'DeveloperApplication',
+  operatingSystem: 'Linux, macOS, Windows',
+  url: canonical.toString(),
+  description: t.meta.description,
+  inLanguage: t.meta.lang,
+  license: LICENCE_URL,
+  codeRepository: REPO_URL,
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'EUR' },
+}
+---
+
+<!doctype html>
+<html lang={t.meta.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t.meta.title}</title>
+    <meta name="description" content={t.meta.description} />
+    <link rel="canonical" href={canonical} />
+
+    <link rel="alternate" hreflang="en" href={new URL('/', Astro.site)} />
+    <link rel="alternate" hreflang="es" href={new URL('/es/', Astro.site)} />
+    <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site)} />
+
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {/* The hero is the first thing anyone sees and it is dark, so the browser chrome
+        should match it rather than flash white around it on mobile. */}
+    <meta name="theme-color" content="#121418" />
+
+    {/* Both faces are above the fold -- Outfit sets the headline, Inter sets the line
+        under it -- so both are preloaded. The mono face dresses the terminal and can
+        arrive a moment later without moving anything. */}
+    <link rel="preload" as="font" type="font/woff2" href={interLatin} crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href={outfitLatin} crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Manual todos" />
+    <meta property="og:locale" content={language === 'en' ? 'en_GB' : 'es_ES'} />
+    <meta property="og:title" content={t.meta.title} />
+    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={t.meta.ogAlt} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={t.meta.title} />
+    <meta name="twitter:description" content={t.meta.description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={t.meta.ogAlt} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+
+  <body>
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-ink"
+    >
+      {language === 'en' ? 'Skip to content' : 'Saltar al contenido'}
+    </a>
+
+    {/* Dark and always dark. It sits over a dark hero and reads as a deliberate bar on
+        the light half, which is better than a header that changes its mind halfway
+        down the page. */}
+    <header
+      class="sticky top-0 z-30 border-b border-white/10 bg-night text-night-text"
+    >
+      <div class="mx-auto flex h-14 max-w-6xl items-center gap-4 px-5 sm:gap-7">
+        <a href={homeFor(language)} class="flex shrink-0 items-center gap-2 font-semibold tracking-tight">
+          <svg class="size-5 text-violet-bright" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="16" rx="3" stroke="currentColor" stroke-width="1.7" />
+            <path
+              d="m7.5 12 2.2 2.2L16 8"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          Manual todos
+        </a>
+
+        <nav class="hidden flex-1 items-center gap-6 text-sm text-night-muted md:flex">
+          <a class="transition-colors hover:text-night-text" href="#how">{t.nav.how}</a>
+          <a class="transition-colors hover:text-night-text" href="#step">{t.nav.step}</a>
+          <a class="transition-colors hover:text-night-text" href="#projects">{t.nav.identity}</a>
+          <a class="transition-colors hover:text-night-text" href="#install">{t.nav.install}</a>
+        </nav>
+
+        <div class="ml-auto flex items-center gap-4">
+          <a
+            class="text-sm font-medium text-night-muted transition-colors hover:text-night-text"
+            href={homeFor(other)}
+            hreflang={other}
+          >
+            {t.footer.language}
+          </a>
+          <a
+            class="inline-flex h-9 items-center rounded-[var(--radius-token)] bg-white px-3 text-sm font-semibold text-night transition hover:bg-white/90 sm:px-4"
+            href="#install"
+          >
+            {t.hero.primary}
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="border-t border-line bg-bg">
+      <div class="mx-auto max-w-6xl px-5 py-12">
+        <p class="max-w-lg font-heading text-lg text-ink">{t.footer.tagline}</p>
+
+        <div
+          class="mt-8 flex flex-col gap-4 border-t border-line pt-6 text-sm text-muted sm:flex-row sm:items-center sm:justify-between"
+        >
+          <div class="flex items-center gap-5">
+            <a class="transition-colors hover:text-ink" href={REPO_URL} rel="noopener">{t.footer.github}</a>
+            <a class="transition-colors hover:text-ink" href={DOCS_URL} rel="noopener">{t.footer.docs}</a>
+            <a class="transition-colors hover:text-ink" href={homeFor(other)} hreflang={other}>
+              {t.footer.language}
+            </a>
+          </div>
+          <p>
+            <a class="transition-colors hover:text-ink" href={LICENCE_URL} rel="noopener">{t.footer.licence}</a>
+            <span class="text-faint"> {t.footer.licenceNote}</span>
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      import '../scripts/enhance'
+    </script>
+  </body>
+</html>

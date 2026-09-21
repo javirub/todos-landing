@@ -1,0 +1,65 @@
+---
+import Terminal from './Terminal.astro'
+import { contentFor, INSTALL_COMMANDS, type Language } from '../i18n/content'
+
+interface Props {
+  language: Language
+}
+
+const { language } = Astro.props
+const t = contentFor(language)
+---
+
+<section class="relative overflow-hidden bg-night text-night-text">
+  <div class="grid-bg absolute inset-0 opacity-60" aria-hidden="true"></div>
+  <div class="hero-glow absolute inset-0" aria-hidden="true"></div>
+  {/* No fade into the light half. A gradient to white read as a blown-out band rather
+      than a transition; the turn is made by the board screenshot instead, which is
+      pulled up far enough to straddle the edge and be lit from both sides. The extra
+      bottom padding is the room it lands in. */}
+
+  <div class="relative mx-auto max-w-6xl px-5 pb-44 pt-16 sm:pt-24 lg:pb-52 lg:pt-28">
+    <div class="mx-auto max-w-3xl text-center">
+      <p
+        class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-medium text-night-muted"
+      >
+        <span class="size-1.5 rounded-full bg-violet-bright"></span>
+        {t.hero.badge}
+      </p>
+
+      <h1 class="mt-6 text-[2.5rem] font-semibold leading-[1.06] sm:text-6xl lg:text-[4.25rem]">
+        {t.hero.titleTop}
+        <span class="block text-violet-bright">{t.hero.titleBottom}</span>
+      </h1>
+
+      <p class="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-night-muted sm:text-xl">
+        {t.hero.subtitle}
+      </p>
+
+      <div class="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
+        <a
+          class="inline-flex h-11 w-full items-center justify-center rounded-[var(--radius-token)] bg-white px-6 font-semibold text-night transition hover:bg-white/90 sm:w-auto"
+          href="#install"
+        >
+          {t.hero.primary}
+        </a>
+        <a
+          class="inline-flex h-11 w-full items-center justify-center rounded-[var(--radius-token)] border border-white/20 px-6 font-medium text-night-text transition hover:border-white/40 hover:bg-white/5 sm:w-auto"
+          href="#how"
+        >
+          {t.hero.secondary}
+        </a>
+      </div>
+
+      <p class="mt-4 text-sm text-night-faint">{t.hero.note}</p>
+    </div>
+
+    <div class="mx-auto mt-14 max-w-2xl">
+      <Terminal lines={t.hero.terminal} />
+
+      <p class="mt-4 text-center font-mono text-xs text-night-faint">
+        {INSTALL_COMMANDS[0]}
+      </p>
+    </div>
+  </div>
+</section>

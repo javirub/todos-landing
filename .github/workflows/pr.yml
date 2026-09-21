@@ -1,0 +1,34 @@
+name: Pull request
+
+# Squash merge means the title of this pull request is the commit message that lands on
+# main. The commit-msg hook rehearses that grammar; `--no-verify` exists, and a title is
+# typed into a browser where no hook has ever run. This is where it is decided.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  title:
+    name: the pull request title is a conventional commit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      # A bot's title is not ours to style. It passes *inside* the job rather than
+      # skipping it: a required check that is skipped never reports a status at all, and
+      # the pull request can then never be merged.
+      - name: Check the title
+        if: github.event.pull_request.user.type != 'Bot'
+        # Through the environment, never through ${{ }} inside the script. A title is
+        # text a stranger wrote, and ${{ }} is textual substitution performed before any
+        # shell exists.
+        env:
+          TITLE: ${{ github.event.pull_request.title }}
+        run: printf '%s\n' "$TITLE" | bash scripts/commit-lint.sh -

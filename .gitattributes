@@ -1,0 +1,12 @@
+# One line ending in the repository, whatever the machine checking it out.
+#
+# `#!/usr/bin/env bash` followed by a CR fails with `bad interpreter`, which names the
+# interpreter and not the real problem. The hooks are the reason this file exists.
+* text=auto eol=lf
+
+*.sh text eol=lf
+.githooks/* text eol=lf
+
+*.png binary
+*.ico binary
+*.woff2 binary

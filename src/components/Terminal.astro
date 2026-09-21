@@ -1,0 +1,57 @@
+---
+import type { TerminalLine } from '../i18n/content'
+
+interface Props {
+  lines: readonly TerminalLine[]
+  /** The directory shown in the title bar. Decoration, but it should look like a path. */
+  cwd?: string
+}
+
+const { lines, cwd = '~/projects/costia' } = Astro.props
+
+const tone: Record<TerminalLine['kind'], string> = {
+  prompt: 'text-night-text',
+  out: 'text-violet-bright',
+  dim: 'text-night-faint',
+}
+---
+
+{/*
+  The lines are rendered in full. The typing animation in `scripts/enhance.ts` empties
+  them and replays them, which means a reader with no JavaScript, or with
+  prefers-reduced-motion, gets the finished transcript rather than an empty box.
+*/}
+<div
+  class="overflow-hidden rounded-[var(--radius-token-lg)] border border-white/10 bg-black/40 shadow-2xl shadow-black/50 backdrop-blur-sm"
+>
+  <div class="flex items-center gap-2 border-b border-white/10 bg-white/5 px-4 py-2.5">
+    <span class="size-2.5 rounded-full bg-[#ff5f57]"></span>
+    <span class="size-2.5 rounded-full bg-[#febc2e]"></span>
+    <span class="size-2.5 rounded-full bg-[#28c840]"></span>
+    <span class="ml-2 font-mono text-xs text-night-faint">{cwd}</span>
+  </div>
+
+  <div
+    class="min-h-[15rem] px-4 py-4 font-mono text-[0.8125rem] leading-[1.9] sm:px-5 sm:text-sm"
+    data-terminal
+    aria-live="off"
+  >
+    {
+      lines.map((line) => (
+        <div class={`flex gap-2 ${tone[line.kind]}`} data-line data-kind={line.kind}>
+          {line.kind === 'prompt' && <span class="select-none text-violet" aria-hidden="true">›</span>}
+          <span class="whitespace-pre-wrap break-words" data-text={line.text}>
+            {line.text}
+          </span>
+        </div>
+      ))
+    }
+    {/* Parked at the end of the transcript; the script moves it line by line. */}
+    <span
+      class="ml-0.5 inline-block h-[1.05em] w-[0.55ch] translate-y-[0.16em] bg-violet-bright"
+      data-caret
+      hidden
+      aria-hidden="true"
+    ></span>
+  </div>
+</div>

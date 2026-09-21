@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* Self-hosted so the first paint does not wait on a third party. */
+@import "./fonts.css";
+
+/* The values live in tokens.css, taken from the board's own ramps. This block only
+   gives them Tailwind's names. */
+@theme {
+  --color-bg: var(--mt-bg);
+  --color-surface: var(--mt-surface);
+  --color-raised: var(--mt-raised);
+  --color-line: var(--mt-line);
+  --color-line-strong: var(--mt-line-strong);
+  --color-ink: var(--mt-text);
+  --color-muted: var(--mt-muted);
+  --color-faint: var(--mt-faint);
+
+  --color-accent: var(--mt-accent);
+  --color-accent-ink: var(--mt-accent-ink);
+  --color-accent-soft: var(--mt-accent-soft);
+
+  --color-night: var(--mt-night);
+  --color-night-raised: var(--mt-night-raised);
+  --color-night-line: var(--mt-night-line);
+  --color-night-text: var(--mt-night-text);
+  --color-night-muted: var(--mt-night-muted);
+  --color-night-faint: var(--mt-night-faint);
+
+  --color-violet: var(--mt-violet);
+  --color-violet-bright: var(--mt-violet-bright);
+  --color-violet-dim: var(--mt-violet-dim);
+
+  --color-danger: var(--mt-danger);
+  --color-success: var(--mt-success);
+
+  --font-sans: var(--mt-font-body);
+  --font-heading: var(--mt-font-heading);
+  --font-mono: var(--mt-font-mono);
+
+  --radius-token: var(--mt-radius);
+  --radius-token-lg: var(--mt-radius-lg);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* The page is two-toned on purpose and the same either way, so it does not follow
+       the reader's system preference. Declaring it stops the browser painting a white
+       gutter under a dark hero on over-scroll. */
+    color-scheme: light;
+  }
+
+  body {
+    @apply bg-surface text-ink antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.028em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  code, kbd, pre {
+    font-family: var(--font-mono);
+    font-variant-ligatures: none;
+  }
+
+  ::selection {
+    background: color-mix(in oklch, var(--color-violet) 30%, transparent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-violet);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+}
+
+/* The caret at the end of the transcript. Named here because the script that turns it
+   on names it, and a keyframe that only exists in one of the two is the kind of thing
+   that works locally and not in a production build. */
+@keyframes mt-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* The faint rule grid behind the hero. Two gradients rather than an image, so it
+   scales with the viewport and costs nothing to download. */
+@utility grid-bg {
+  background-image:
+    linear-gradient(to right, color-mix(in oklch, white 5%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, white 5%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* The glow the hero's headline sits in. */
+@utility hero-glow {
+  background: radial-gradient(
+    58% 46% at 50% 18%,
+    color-mix(in oklch, var(--color-violet) 32%, transparent) 0%,
+    transparent 72%
+  );
+}
+
+@utility card {
+  @apply rounded-[var(--radius-token-lg)] border border-line bg-surface;
+}
+
+/* Applied by the enhancement script, so a page without JavaScript is simply visible
+   rather than blank -- the reveal is an improvement, never a requirement. */
+@utility will-reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.65s ease-out, transform 0.65s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@utility is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .will-reveal {
+    opacity: 1;
+    transform: none;
+  }
+}

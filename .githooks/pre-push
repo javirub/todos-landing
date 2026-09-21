@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# The whole of CI, which for a static site is two commands and a few seconds. It runs
+# here as well as on the server because finding a type error now costs seconds and
+# finding it in a pull request costs a round trip.
+#
+# It also refuses a push straight to main. That is a convenience, not a control -- the
+# control is the branch protection on GitHub -- but it is the one that catches the
+# mistake while it is still cheap to undo.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+while read -r _local_ref _local_sha remote_ref _remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main)
+      if [ "${ALLOW_PUSH_MAIN:-}" != "1" ]; then
+        echo "pre-push: main takes pull requests, not pushes." >&2
+        echo "          ALLOW_PUSH_MAIN=1 git push  if you mean it." >&2
+        exit 1
+      fi ;;
+  esac
+done
+
+command -v bun >/dev/null 2>&1 || { echo "pre-push: no bun on PATH; skipped."; exit 0; }
+
+bun run check
+bun run build

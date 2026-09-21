@@ -1,0 +1,68 @@
+/*
+ * Manual todos design tokens.
+ *
+ * These are not invented here. The board generates its CSS from
+ * `todo-plugin/src/lib/theme/tokens.ts`, where every lightness in the interface is
+ * fixed per mode and a project only ever chooses a hue, a chroma and a texture. The
+ * values below are that generator's LIGHT and DARK ramps evaluated at `NEUTRAL_THEME`
+ * -- hue 250, chroma 0.045, neutral chroma 0.004 -- which is the identity the board
+ * wears on its cross-project view.
+ *
+ * So the screenshots on this page and the page around them are the same material, and
+ * they stay that way because the numbers came from one place. If the ramps in the
+ * plugin move, these move with them the same day.
+ *
+ * The --mt- prefix exists because `--accent` already means something in Tailwind's
+ * generated theme and something else in the board's stylesheet, and these have to be
+ * importable without either meaning winning.
+ */
+
+:root {
+  /* ---- The light half: the board's LIGHT ramp at the neutral hue ---- */
+  --mt-bg: oklch(0.975 0.004 250);
+  --mt-surface: oklch(1 0.0028 250);
+  --mt-raised: oklch(0.955 0.004 250);
+  --mt-line: oklch(0.885 0.004 250);
+  --mt-line-strong: oklch(0.78 0.004 250);
+  --mt-text: oklch(0.235 0.002 250);
+  --mt-muted: oklch(0.475 0.004 250);
+  --mt-faint: oklch(0.615 0.004 250);
+
+  /* 0.47 rather than the 0.53 that looks right by eye. The plugin's comment explains
+     it: at high chroma near hue 190 a lighter accent drops white text to 3.75:1, and
+     the accent is a text background. The value is kept in step rather than re-judged. */
+  --mt-accent: oklch(0.47 0.045 250);
+  --mt-accent-ink: oklch(0.99 0.011 250);
+  --mt-accent-soft: oklch(0.945 0.016 250);
+
+  /* ---- The dark half: the board's DARK ramp, which the hero is built on ---- */
+  --mt-night: oklch(0.155 0.004 250);
+  --mt-night-raised: oklch(0.235 0.004 250);
+  --mt-night-line: oklch(0.3 0.004 250);
+  --mt-night-text: oklch(0.965 0.002 250);
+  --mt-night-muted: oklch(0.735 0.004 250);
+  --mt-night-faint: oklch(0.575 0.004 250);
+
+  /* ---- One accent that belongs to this page and not to the board ----
+     The hero needs a colour that survives being the only bright thing on a near-black
+     screen, and the board's accent at that lightness is a wash. This is the violet of
+     the Claude Code plugin badge in the README, which is the one piece of colour the
+     product already wears outside the board. It is a second hue, not a second brand:
+     the board's own theme carries an `--accent-2` for exactly this reason. */
+  --mt-violet: oklch(0.63 0.2 293);
+  --mt-violet-bright: oklch(0.74 0.17 293);
+  --mt-violet-dim: oklch(0.42 0.14 293);
+
+  /* Semantic, and deliberately hue-locked. "Overdue" has to mean the same thing on
+     every screen, including one whose accent is already red. */
+  --mt-danger: oklch(0.53 0.19 25);
+  --mt-success: oklch(0.5 0.14 152);
+
+  --mt-font-body: "Inter Variable", "Inter Fallback", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mt-font-heading: "Outfit Variable", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
+  --mt-font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* `radius: soft` in the board's vocabulary. */
+  --mt-radius: 0.625rem;
+  --mt-radius-lg: 1rem;
+}

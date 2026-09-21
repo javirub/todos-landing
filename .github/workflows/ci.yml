@@ -1,0 +1,51 @@
+name: CI
+
+# A static site, so the whole of CI is "does it still type-check and build". That is
+# seconds, which is why the pre-push hook runs the same two commands: the hook is for
+# speed, this is for the guarantee.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  check:
+    name: types and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - run: bun install --frozen-lockfile
+
+      - name: Types, including both message catalogues
+        # `content.es` is typed against `content.en`, so a string added to one locale
+        # and not the other fails here rather than shipping a gap nobody notices.
+        run: bun run check
+
+      - run: bun run build
+
+      - name: Both locales were built
+        run: |
+          set -euo pipefail
+          for page in dist/index.html dist/es/index.html; do
+            [ -s "$page" ] || { echo "$page is missing or empty."; exit 1; }
+          done
+          grep -q 'hreflang="es"' dist/index.html || { echo "No hreflang on the English page."; exit 1; }
+          grep -q 'hreflang="en"' dist/es/index.html || { echo "No hreflang on the Spanish page."; exit 1; }
+          [ -s dist/sitemap-index.xml ] || { echo "No sitemap."; exit 1; }
+
+      - name: The Open Graph image the pages reference exists
+        # Both pages name /og.png in four meta tags. A card that 404s is worse than no
+        # card, and nothing else in the build would notice.
+        run: test -s dist/og.png
